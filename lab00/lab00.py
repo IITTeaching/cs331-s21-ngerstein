@@ -1,6 +1,8 @@
 # Change this function
 def my_palindrome():
-    return ''
+    word = input("Put a word to see if it is a plaindrome: ")
+    reversed = word[::-1]
+    return reversed
 
 # Do not change the main method
 def main():
