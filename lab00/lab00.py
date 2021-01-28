@@ -1,5 +1,8 @@
 # Change this function
 def my_palindrome():
+    return 'racecar'
+
+def interactive_palindrome():
     word = input("Put a word to see if it is a plaindrome: ")
     reversed = word[::-1]
     return reversed
