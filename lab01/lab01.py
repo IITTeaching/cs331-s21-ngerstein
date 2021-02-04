@@ -22,7 +22,19 @@ def captured_output():
 
 # implement this function
 def is_perfect(n):
-    pass
+    
+    numList = []
+    for i in range(1, n):
+        if(n % i == 0):
+            numList.append(i)
+    length = len(numList)
+    i = 0
+    perfect = 0
+    while i<length:
+        perfect += numList[i]
+        i += 1
+    return (perfect == n)            
+
 
 # (3 points)
 def test1():
@@ -40,7 +52,19 @@ def test1():
 
 # implement this function
 def multiples_of_3_and_5(n):
-    pass
+    numList2 = []
+    for i in range(n):
+        if(i % 3 == 0 or i%5 == 0):
+            numList2.append(i)
+    i = 0
+    length = len(numList2)
+    multiples = 0 
+          
+    while i < length:
+        multiples += numList2[i]
+        i += 1
+    return multiples    
+
 
 # (3 points)
 def test2():
@@ -53,7 +77,12 @@ def test2():
 # EXERCISE 3
 #################################################################################
 def integer_right_triangles(p):
-    pass
+
+    numList3 = [(a, b, p - a - b) for a in range (1, p)
+            for b in range (a, p-a)
+            if a**2 + b**2 == (p-(a+b))**2
+        ]
+    return len(numList3)   
 
 def test3():
     tc = unittest.TestCase()
@@ -67,7 +96,30 @@ def test3():
 
 # implement this function
 def gen_pattern(chars):
-    pass
+    lines = (len(chars)*2) -1
+    charInLines = (lines)*2 -1
+    numChars = 0
+    newChars = chars[::-1]
+    
+    for i in range(0, lines):
+        
+        if(i < lines/2 ):
+            numChars+= 1
+        else:
+            numChars+= -1
+        wordtoUse1 = newChars[0:numChars]
+        
+        
+        mid = wordtoUse1[::-1]
+        
+        wordtoUse2 = mid[1::]
+        
+        wordtoUse = wordtoUse1 + wordtoUse2
+        
+        firstStep = '.'.join(wordtoUse)
+        secondStep = firstStep.center(charInLines, '.')
+        print(secondStep)
+
 
 def test4():
     tc = unittest.TestCase()
