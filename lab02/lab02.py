@@ -34,7 +34,27 @@ ROMEO_SOLILOQUY = """
 # Implement this function
 def compute_ngrams(toks, n=2):
     """Returns an n-gram dictionary based on the provided list of tokens."""
-    pass
+    gramsList = []
+    
+    toks2 = list(dict.fromkeys(toks))
+    for i in range(len(toks) - (n-1)):
+        tempList = toks[i:i+n]
+        conTuple = tuple(tempList)
+        gramsList.append(conTuple)
+    dictlist = []
+    ngramDict= {}
+    for h in range(len(toks2) - (n-1)):
+        for k in range(len(gramsList)):
+            temptup = gramsList[k]
+            if temptup[0] == toks2[h]:
+                temptup2 = temptup[1::]
+                dictlist.append(temptup2)
+                
+        ngramDict.update({toks2[h]:dictlist})
+        dictlist = []
+    return ngramDict
+
+
 
 def test1():
     test1_1()
@@ -93,7 +113,47 @@ def test1_2():
 ################################################################################
 # Implement this function
 def gen_passage(ngram_dict, length=100):
-    pass
+    newPassage = ''
+    sortedkeys = sorted(ngram_dict.keys())
+    currentKey = random.choice(sortedkeys)
+    
+    newPassage += currentKey
+    word = 1
+    for i in range(length):
+        
+        
+        toAdd = random.choice(ngram_dict[currentKey])
+        
+        toAddString = ''
+        for item in toAdd:
+            toAddString = ' ' + item 
+            if word < 10:
+                newPassage += toAddString
+                word += 1
+
+        
+        newKey = toAdd[len(toAdd)-1]
+        #print('new newKey ' + newKey)
+        
+        #print("new currentKey " + currentKey)
+        for key in sortedkeys:
+            
+            if key == newKey:
+                currentKey = newKey
+        
+       # print(currentKey)
+       # print(newKey)
+        #print(newKey == currentKey)
+        if (currentKey != newKey) and word < 10:
+            currentKey = random.choice(sortedkeys)
+            newPassage += ' ' + currentKey
+            word += 1
+        #print(newPassage)
+        
+    return newPassage
+
+
+
 
 # 50 Points
 def test2():
