@@ -79,7 +79,7 @@ def test2():
 def integer_right_triangles(p):
 
     numList3 = [(a, b, p - a - b) for a in range (1, p)
-            for b in range (a, p-a)
+    for b in range (a, p-a)
             if a**2 + b**2 == (p-(a+b))**2
         ]
     return len(numList3)   
