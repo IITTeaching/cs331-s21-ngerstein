@@ -14,18 +14,57 @@ class ExtensibleHashTable:
 
     def find_bucket(self, key):
         # BEGIN_SOLUTION
+        i = key % self.n_buckets
+        
+       
+        while self.buckets[i] != None:
+            if self.buckets[i][0] == key:
+                return i
+            
+            i += 1
+            if i == self.n_buckets:
+                i = 0
+        return i
+ 
         # END_SOLUTION
 
     def __getitem__(self,  key):
         # BEGIN_SOLUTION
-        # END_SOLUTION
+        
+        i = self.find_bucket(key)
+        
+        if self.buckets[i] != None:    
+            return self.buckets[i][1]
+        raise KeyError
 
+        # END_SOLUTION
     def __setitem__(self, key, value):
         # BEGIN_SOLUTION
+        pos = self.find_bucket(key)
+        self.nitems += 1
+        self.buckets[pos] = (key, value)
+        
+        if (self.nitems > self.n_buckets * self.fillfactor):
+            self.n_buckets *= 2
+            templst = []
+            i = 0
+            
+            while i < len(self.buckets):
+                if self.buckets[i] != None:
+                    templst.append(self.buckets[i])
+                i += 1       
+            self.buckets = [None] * self.n_buckets
+            for buck in templst:
+                hnew = self.find_bucket(buck[0])
+                self.buckets[hnew] = (buck[0], buck[1])
+
         # END_SOLUTION
 
     def __delitem__(self, key):
         # BEGIN SOLUTION
+        pos = self.find_bucket(key)
+        self.buckets[pos] = None
+        self.nitems -= 1
         # END SOLUTION
 
     def __contains__(self, key):
@@ -43,6 +82,9 @@ class ExtensibleHashTable:
 
     def __iter__(self):
         ### BEGIN SOLUTION
+        for i in range(self.n_buckets):
+            if self.buckets[i]:
+                yield self.buckets[i][0]
         ### END SOLUTION
 
     def keys(self):
@@ -50,10 +92,17 @@ class ExtensibleHashTable:
 
     def values(self):
         ### BEGIN SOLUTION
+        for i in range(self.n_buckets):
+            if self.buckets[i]:
+                yield self.buckets[i][1]
         ### END SOLUTION
 
     def items(self):
         ### BEGIN SOLUTION
+        lst = []
+        for i in range(self.n_buckets):
+            if self.buckets[i]:
+                yield self.buckets[i]
         ### END SOLUTION
 
     def __str__(self):
@@ -70,7 +119,7 @@ def test_insert():
     tc = TestCase()
     h = ExtensibleHashTable(n_buckets=100000)
 
-    for i in range(1,10000):
+    for i in range(1,100):
         h[i] = i
         tc.assertEqual(h[i], i)
         tc.assertEqual(len(h), i)
@@ -79,6 +128,7 @@ def test_insert():
     for i in range(1000):
         k = random.randint(0,1000000)
         h[k] = k
+       
         tc.assertEqual(h[k], k)
 
     for i in range(1000):
