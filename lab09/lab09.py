@@ -1,5 +1,5 @@
 #changes
-
+import sys
 from unittest import TestCase
 import random
 
@@ -53,6 +53,15 @@ class HBStree:
         KeyError, if key does not exist.
         """
         # BEGIN SOLUTION
+        curtree = self.root_versions[-1]
+        while curtree != None:
+            if curtree.val == key:
+                return key
+            elif curtree.val > key:
+                curtree = curtree.left
+            else:
+                curtree = curtree.right
+        raise KeyError   
         # END SOLUTION
 
     def __contains__(self, el):
@@ -60,6 +69,15 @@ class HBStree:
         Return True if el exists in the current version of the tree.
         """
         # BEGIN SOLUTION
+        curtree = self.root_versions[-1]
+        while curtree != None:
+            if curtree.val == el:
+                return True
+            elif curtree.val > el:
+                curtree = curtree.left
+            else:
+                curtree = curtree.right
+        return False   
         # END SOLUTION
 
     def insert(self,key):
@@ -69,11 +87,53 @@ class HBStree:
         from creating a new version.
         """
         # BEGIN SOLUTION
+        if self.__contains__(key):
+            sys.exit()
+        def recurse(curtree):
+            if curtree == None:
+                return self.INode(key, None, None)
+            elif key < curtree.val:
+                return self.INode(curtree.val, recurse(curtree.left), curtree.right)
+            else:
+                return self.INode(curtree.val, curtree.left, recurse(curtree.right))
+        
+        if self.root_versions[-1] == None:
+            self.root_versions.append(self.INode(key, None, None))
+        else:
+            curtree = self.root_versions[-1]
+            self.root_versions.append(recurse(curtree))
+        
         # END SOLUTION
 
     def delete(self,key):
         """Delete key from the tree, creating a new version of the tree. If key does not exist in the current version of the tree, then do nothing and refrain from creating a new version."""
         # BEGIN SOLUTION
+        
+        
+
+
+        if not self.__contains__(key):
+            sys.exit()
+        def delrecurse(curtree, key):
+            if curtree.val > key:
+                return self.INode(curtree.val, delrecurse(curtree.left, key), curtree.right)
+            elif curtree.val < key:
+                return self.INode(curtree.val, curtree.left, delrecurse(curtree.right, key))
+            else:
+                if not curtree.right and not curtree.left:
+                    return None
+                elif not curtree.left:
+                    return curtree.right
+                elif not curtree.right:
+                    return curtree.left
+                else:
+                    tempcurtree = curtree.left
+                    while tempcurtree.right:
+                        tempcurtree = tempcurtree.right
+                    return self.INode(tempcurtree.val, delrecurse(tempcurtree.left, key), curtree.right)
+        
+        self.root_versions.append(delrecurse(self.root_versions[-1], key))
+
         # END SOLUTION
 
     @staticmethod
@@ -145,6 +205,16 @@ class HBStree:
         if timetravel < 0 or timetravel >= len(self.root_versions):
             raise IndexError(f"valid versions for time travel are 0 to {len(self.root_versions) -1}, but was {timetravel}")
         # BEGIN SOLUTION
+        curtree = self.root_versions[(timetravel * -1) - 1]
+        def access(curtree):
+            if curtree:
+                yield from access(curtree.left)
+                yield curtree.val
+                yield from access(curtree.right)
+            
+        yield from access(curtree)
+            
+        
         # END SOLUTION
 
     @staticmethod
