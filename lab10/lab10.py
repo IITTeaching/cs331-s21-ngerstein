@@ -15,6 +15,9 @@ class AVLTree:
 
         def rotate_left(self):
             ### BEGIN SOLUTION
+            n = self.right
+            self.val, n.val = n.val, self.val
+            self.right, n.right, self.left, n.left = n.right, n.left, n, self.left
             ### END SOLUTION
 
         @staticmethod
@@ -31,16 +34,67 @@ class AVLTree:
     @staticmethod
     def rebalance(t):
         ### BEGIN SOLUTION
+        def balancefactor(node):
+            return AVLTree.Node.height(node.right) - AVLTree.Node.height(node.left)
+        if balancefactor(t) == -2:
+            if balancefactor(t.left) == 1:
+                t.left.rotate_left()
+            t.rotate_right()
+            AVLTree.rebalance(t.right)
+        elif balancefactor(t) == 2:
+            if balancefactor(t.right) == -1:
+                t.right.rotate_right()
+            t.rotate_left()
+            AVLTree.rebalance(t.left)
         ### END SOLUTION
 
     def add(self, val):
         assert(val not in self)
         ### BEGIN SOLUTION
+        def recurse(node, val):
+            if not node:
+                return self.Node(val)
+            elif val > node.val:
+                node.right = recurse(node.right, val)
+            else:
+                node.left = recurse(node.left, val)
+            self.rebalance(node)
+            return node
+        if self.size == 0:
+            self.root = self.Node(val)
+        else:
+            recurse(self.root, val)
+        self.size += 1
         ### END SOLUTION
 
     def __delitem__(self, val):
         assert(val in self)
         ### BEGIN SOLUTION
+        def recurse(node, val):
+            if not node:
+                return None
+            elif val > node.val:
+                node.right = recurse(node.right, val)
+            elif val < node.val:
+                node.left = recurse(node.left, val)
+            elif val == node.val:
+                if not node.left and not node.right:
+                    return None
+                if not node.left:
+                    return node.right
+                if not node.right:
+                    return node.left
+                
+                else:
+                    tempnode = node.left
+                    while tempnode.right:
+                        tempnode = tempnode.right
+                    node.val = tempnode.val
+                    node.left = recurse(node.left, tempnode.val)          
+            self.rebalance(node)
+            return node
+        self.root = recurse(self.root, val)
+        self.size +- 1
         ### END SOLUTION
 
     def __contains__(self, val):
