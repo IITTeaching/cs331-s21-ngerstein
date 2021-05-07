@@ -96,7 +96,6 @@ def fill_buckets(idx = 0, book = book_to_words()):
         else:
             data[word[-1 -idx]] = word.decode('ascii')
     return data
-test = [b'aaa' , b'aba', b'acc', b'abb', b'bbb', b'ccc', b'ccca']
 
 
 def LSD_sort(idx, data):
