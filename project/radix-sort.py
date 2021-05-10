@@ -92,9 +92,9 @@ def fill_buckets(idx = 0, book = book_to_words()):
     data = HashTable()
     for word in book:
         if len(word) < idx + 1:
-            data[0] = word.decode('ascii')
+            data[0] = word
         else:
-            data[word[-1 -idx]] = word.decode('ascii')
+            data[word[-1 -idx]] = word
     return data
 
 
@@ -107,7 +107,7 @@ def LSD_sort(idx, data):
         if len(items[1]) < idx + 1:
             newdata[0] = items[1]
         else:
-            byte = items[1].encode('ascii','replace')
+            byte = items[1]
             newdata[byte[-1 -idx]] = items[1]
     return newdata
 
@@ -135,21 +135,21 @@ def radix_a_book(book = book_to_words(), key = None, idx = None):
 def test_simple():
     tc = TestCase()
     test = [b'aaa' , b'aba', b'acc', b'abb', b'bbb', b'ccc', b'ccca']
-    print(f'Output is supposed to be: aaa, aba, abb, acc, bbb, ccc, ccca')
+    print(f'Output is supposed to be: b\'aaa\', b\'aba\', b\'abb\', b\'acc\', b\'bbb\', b\'ccc\', b\'ccca\'')
     print(radix_a_book(book = test))
     
-    tc.assertEqual(radix_a_book(book = test, key = 0, idx = 3), (0, 'acc'))
+    tc.assertEqual(radix_a_book(book = test, key = 0, idx = 3), (0, b'acc'))
 
 # RR-fix (simple) test
 # 10 points
 def test_simple2():
     tc = TestCase()
     test2 = [b'horse' , b'banana', b'monkey', b'bonano', b'monkiy', b'hornse', b'grasshopper', b'catfish', b'batfish']
-    print(f'Output is supposed to be: 0: horse, 0: banana, 0: bonano, 0: hornse, 0: monkey, 0: monkiy, 0: batfish, 0: catfish, 103: grasshopper ')
+    print(f'Output is supposed to be: 0: b\'horse\', 0: b\'banana\', 0: b\'bonano\', 0: b\'hornse\', 0: b\'monkey\', 0: b\'monkiy\', 0: b\'batfish\', 0: b\'catfish\' 103: b\'grasshopper\' ')
     print(radix_a_book(test2))
-    tc.assertEqual(radix_a_book(book = test2, key = 0, idx = 3), (0, 'hornse'))
-    tc.assertEqual(radix_a_book(book = test2, key = 0, idx = 1), (0, 'banana'))
-    tc.assertEqual(radix_a_book(book = test2, key = 0), [(0, 'horse'), (0, 'banana'), (0, 'bonano'), (0, 'hornse'), (0, 'monkey'), (0, 'monkiy'), (0, 'batfish'), (0, 'catfish')])
+    tc.assertEqual(radix_a_book(book = test2, key = 0, idx = 3), (0, b'hornse'))
+    tc.assertEqual(radix_a_book(book = test2, key = 0, idx = 1), (0, b'banana'))
+    tc.assertEqual(radix_a_book(book = test2, key = 0), [(0, b'horse'), (0, b'banana'), (0, b'bonano'), (0, b'hornse'), (0, b'monkey'), (0, b'monkiy'), (0, b'batfish'), (0, b'catfish')])
 # LR-fix (simple) test
 # 10 points
 def test_book1():
@@ -160,11 +160,10 @@ def test_book1():
     b = radix_a_book(key = 0, idx = 3000)
     char1 = a[1]
     char2 = b[1]
-    byte1 = char1.encode('ascii')
-    byte2 = char2.encode('ascii')
+    
     print(f'a: {a} should come before b: {b}')
-    tc.assertEqual(radix_a_book(key = t[0], idx = 0), (104, 'https://www.gutenberg.org/8/84/'))
-    tc.assertTrue(byte2[0] > byte1[0])
+    tc.assertEqual(radix_a_book(key = t[0], idx = 0), (104, b'https://www.gutenberg.org/8/84/'))
+    tc.assertTrue(char2[0] > char1[0])
 
 
 
